@@ -1,6 +1,6 @@
 {
     "name" : "若依移动端",
-    "appid" : "__UNI__25A9D80",
+    "appid" : "__UNI__F4EE97F",
     "description" : "",
     "versionName" : "1.2.0",
     "versionCode" : "100",
@@ -41,7 +41,7 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wxccd7e2a0911b3397",
+        "appid" : "wxbf9033cc60ce8507",
         "setting" : {
             "urlCheck" : false,
             "es6" : false,
@@ -65,5 +65,6 @@
             "mode" : "hash",
             "base" : "./"
         }
-    }
+    },
+    "sassImplementation" : "sass"
 }

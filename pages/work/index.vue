@@ -1,182 +1,204 @@
 <template>
-  <view class="work-container">
-    <!-- 轮播图 -->
-    <uni-swiper-dot class="uni-swiper-dot-box" :info="data" :current="current" field="content">
-      <swiper class="swiper-box" :current="swiperDotIndex" @change="changeSwiper">
-        <swiper-item v-for="(item, index) in data" :key="index">
-          <view class="swiper-item" @click="clickBannerItem(item)">
-            <image :src="item.image" mode="aspectFill" :draggable="false" />
-          </view>
-        </swiper-item>
-      </swiper>
-    </uni-swiper-dot>
-
-    <!-- 宫格组件 -->
-    <uni-section title="系统管理" type="line"></uni-section>
-    <view class="grid-body">
-      <uni-grid :column="4" :showBorder="false" @change="changeGrid">
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="person-filled" size="30"></uni-icons>
-            <text class="text">用户管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="staff-filled" size="30"></uni-icons>
-            <text class="text">角色管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="color" size="30"></uni-icons>
-            <text class="text">菜单管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="settings-filled" size="30"></uni-icons>
-            <text class="text">部门管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="heart-filled" size="30"></uni-icons>
-            <text class="text">岗位管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="bars" size="30"></uni-icons>
-            <text class="text">字典管理</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="gear-filled" size="30"></uni-icons>
-            <text class="text">参数设置</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="chat-filled" size="30"></uni-icons>
-            <text class="text">通知公告</text>
-          </view>
-        </uni-grid-item>
-        <uni-grid-item>
-          <view class="grid-item-box">
-            <uni-icons type="wallet-filled" size="30"></uni-icons>
-            <text class="text">日志管理</text>
-          </view>
-        </uni-grid-item>
-      </uni-grid>
+  <view class="learn-container">
+    <!-- 顶部间距 -->
+    <top-spacing :height="statusBarHeight"></top-spacing>
+    
+    <!-- 顶部标题区 -->
+    <view class="header">
+      <image class="title-icon" src="https://pic1.imgdb.cn/item/67f3c634e381c3632bee9026.png" mode="aspectFit"></image>
+      <text class="title">学习国际象棋</text>
+    </view>
+    
+    <!-- 引导对话区 -->
+    <view class="guide-dialog">
+      <image class="avatar" src="https://pic1.imgdb.cn/item/67f3c5c7e381c3632bee8ff9.png" mode="aspectFit"></image>
+      <view class="dialog-bubble">
+        <text class="dialog-text">让我教你如何下国际象棋吧！</text>
+      </view>
+    </view>
+    
+    <!-- 功能模块区 -->
+    <view class="modules">
+      <!-- 规则入门 -->
+      <view class="module-item" @click="handleModuleClick('rules')">
+        <view class="module-icon">
+          <image src="https://pic1.imgdb.cn/item/67f3c634e381c3632bee9029.png" mode="aspectFit"></image>
+        </view>
+        <view class="module-content">
+          <text class="module-title">规则入门</text>
+        </view>
+      </view>
+      
+      <!-- 基础战术 -->
+      <view class="module-item" @click="handleModuleClick('tactics')">
+        <view class="module-icon">
+          <image src="https://pic1.imgdb.cn/item/67f3c634e381c3632bee9028.png" mode="aspectFit"></image>
+        </view>
+        <view class="module-content">
+          <text class="module-title">基础战术</text>
+        </view>
+      </view>
+      
+      <!-- 资料仓库 -->
+      <view class="module-item" @click="handleModuleClick('library')">
+        <view class="module-icon">
+          <image src="https://pic1.imgdb.cn/item/67f3c634e381c3632bee9027.png" mode="aspectFit"></image>
+        </view>
+        <view class="module-content">
+          <text class="module-title">资料仓库</text>
+        </view>
+      </view>
     </view>
   </view>
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        current: 0,
-        swiperDotIndex: 0,
-        data: [{
-            image: '/static/images/banner/banner01.jpg'
-          },
-          {
-            image: '/static/images/banner/banner02.jpg'
-          },
-          {
-            image: '/static/images/banner/banner03.jpg'
-          }
-        ]
-      }
-    },
-    methods: {
-      clickBannerItem(item) {
-        console.info(item)
-      },
-      changeSwiper(e) {
-        this.current = e.detail.current
-      },
-      changeGrid(e) {
-        this.$modal.showToast('模块建设中~')
+import TopSpacing from '@/components/TopSpacing.vue'
+
+export default {
+  components: {
+    TopSpacing
+  },
+  data() {
+    return {
+      statusBarHeight: 0
+    }
+  },
+  onLoad() {
+    // 获取状态栏高度
+    const systemInfo = uni.getSystemInfoSync()
+    this.statusBarHeight = systemInfo.statusBarHeight
+  },
+  methods: {
+    // 处理模块点击
+    handleModuleClick(type) {
+      switch (type) {
+        case 'rules':
+          uni.navigateTo({
+            url: '/pages/work/learn/index'
+          });
+          break;
+        case 'tactics':
+          uni.navigateTo({
+            url: '/pages/work/tactics/index'
+          });
+          break;
+        case 'library':
+          uni.navigateTo({
+            url: '/pages/work/repository/index'
+          });
+          break;
       }
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  /* #ifndef APP-NVUE */
-  page {
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    background-color: #fff;
-    min-height: 100%;
-    height: auto;
-  }
+.learn-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-image: url('https://pic1.imgdb.cn/item/67f356300ba3d5a1d7ef164f.png');
+  background-size: cover;
+  background-position: center;
+  padding: 40rpx 30rpx;
+  box-sizing: border-box;
+}
 
-  view {
-    font-size: 14px;
-    line-height: inherit;
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40rpx;
+  
+  .title-icon {
+    width: 64rpx;
+    height: 64rpx;
+    margin-right: 20rpx;
   }
-  /* #endif */
-
-  .text {
+  
+  .title {
+    color: #ffffff;
+    font-size: 64rpx;
+    font-weight: bold;
     text-align: center;
-    font-size: 26rpx;
-    margin-top: 10rpx;
   }
+}
 
-  .grid-item-box {
-    flex: 1;
-    /* #ifndef APP-NVUE */
-    display: flex;
-    /* #endif */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 15px 0;
+.guide-dialog {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 60rpx;
+  
+  .avatar {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 60rpx;
+    margin-right: 20rpx;
   }
-
-  .uni-margin-wrap {
-    width: 690rpx;
-    width: 100%;
-    ;
-  }
-
-  .swiper {
-    height: 300rpx;
-  }
-
-  .swiper-box {
-    height: 150px;
-  }
-
-  .swiper-item {
-    /* #ifndef APP-NVUE */
-    display: flex;
-    /* #endif */
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    height: 300rpx;
-    line-height: 300rpx;
-  }
-
-  @media screen and (min-width: 500px) {
-    .uni-swiper-dot-box {
-      width: 400px;
-      /* #ifndef APP-NVUE */
-      margin: 0 auto;
-      /* #endif */
-      margin-top: 8px;
+  
+  .dialog-bubble {
+    background-color: #ffffff;
+    border-radius: 30rpx;
+    padding: 20rpx 30rpx;
+    position: relative;
+    max-width: 70%;
+    
+    &:before {
+      content: '';
+      position: absolute;
+      left: -20rpx;
+      top: 40rpx;
+      border-width: 10rpx;
+      border-style: solid;
+      border-color: transparent #ffffff transparent transparent;
     }
-
-    .image {
-      width: 100%;
+    
+    .dialog-text {
+      color: #000000;
+      font-size: 40rpx;
     }
   }
+}
+
+.modules {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  
+  .module-item {
+    display: flex;
+    align-items: center;
+    background-color: rgba(67, 41, 21, 0.7);
+    border-radius: 20rpx;
+    padding: 30rpx;
+    margin-bottom: 30rpx;
+    
+    .module-icon {
+      width: 80rpx;
+      height: 80rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      image {
+        width: 80rpx;
+        height: 80rpx;
+      }
+    }
+    
+    .module-content {
+      margin-left: 30rpx;
+      display: flex;
+      flex-direction: column;
+      
+      .module-title {
+        color: #ffffff;
+        font-size: 48rpx;
+      }
+    }
+  }
+}
 </style>

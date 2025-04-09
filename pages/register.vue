@@ -1,5 +1,8 @@
 <template>
   <view class="normal-login-container">
+    <!-- 顶部间距 -->
+    <top-spacing :height="statusBarHeight"></top-spacing>
+    
     <view class="logo-content align-center justify-center flex">
       <image style="width: 100rpx;height: 100rpx;" :src="globalConfig.appInfo.logo" mode="widthFix">
       </image>
@@ -37,10 +40,15 @@
 
 <script>
   import { getCodeImg, register } from '@/api/login'
+  import TopSpacing from '@/components/TopSpacing.vue'
 
   export default {
+    components: {
+      TopSpacing
+    },
     data() {
       return {
+        statusBarHeight: 0,
         codeUrl: "",
         captchaEnabled: true,
         globalConfig: getApp().globalData.config,
@@ -55,6 +63,9 @@
     },
     created() {
       this.getCode()
+      // 获取状态栏高度
+      const systemInfo = uni.getSystemInfoSync()
+      this.statusBarHeight = systemInfo.statusBarHeight
     },
     methods: {
       // 用户登录

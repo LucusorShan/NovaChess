@@ -1,0 +1,282 @@
+// styles/chess/chess-common.scss
+
+/* 国际象棋通用样式 */
+
+// 主题颜色
+$primary-color: #81B64C; // 主色调（绿色）
+$secondary-color: #f5a623; // 次要色调（橙色）
+$text-color: #ffffff; // 文本颜色（白色）
+$bg-dark: #222222; // 深色背景
+$bg-light: #333333; // 浅色背景
+$border-color: rgba(255, 255, 255, 0.2); // 边框颜色
+
+// 棋盘颜色
+$board-light: #f0d9b5; // 棋盘浅色格
+$board-dark: #b58863; // 棋盘深色格
+$board-border: #604020; // 棋盘边框
+
+// 状态颜色
+$success-color: #4CAF50; // 成功状态
+$warning-color: #FFC107; // 警告状态
+$error-color: #F44336; // 错误状态
+$info-color: #2196F3; // 信息状态
+
+// 字体大小
+$font-size-small: 22rpx;
+$font-size-normal: 24rpx;
+$font-size-medium: 28rpx;
+$font-size-large: 32rpx;
+$font-size-xlarge: 36rpx;
+
+// 间距
+$spacing-xs: 5rpx;
+$spacing-sm: 10rpx;
+$spacing-md: 20rpx;
+$spacing-lg: 30rpx;
+$spacing-xl: 40rpx;
+
+// 圆角
+$border-radius-sm: 6rpx;
+$border-radius-md: 10rpx;
+$border-radius-lg: 20rpx;
+$border-radius-circle: 50%;
+
+// 阴影
+$box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.4);
+
+// 混合器
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card {
+  background-color: $bg-light;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  box-shadow: $box-shadow;
+}
+
+// 按钮样式
+@mixin btn-primary {
+  background-color: $primary-color;
+  color: $text-color;
+  border-radius: $border-radius-md;
+  padding: $spacing-md $spacing-lg;
+  @include flex-center;
+  text-align: center;
+}
+
+@mixin btn-secondary {
+  background-color: $secondary-color;
+  color: $text-color;
+  border-radius: $border-radius-md;
+  padding: $spacing-md $spacing-lg;
+  @include flex-center;
+  text-align: center;
+}
+
+@mixin btn-outline {
+  border: 2rpx solid $border-color;
+  color: $text-color;
+  border-radius: $border-radius-md;
+  padding: $spacing-md $spacing-lg;
+  @include flex-center;
+  text-align: center;
+}
+
+// 文本溢出处理
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 全局动画
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+// 响应式布局
+@mixin responsive-width {
+  width: 100%;
+  max-width: 750rpx;
+  margin: 0 auto;
+}
+
+// 容器样式
+.chess-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-image: url('https://pic1.imgdb.cn/item/67f356300ba3d5a1d7ef164f.png');
+  background-size: cover;
+  background-position: center;
+  box-sizing: border-box;
+  padding-bottom: 120rpx; // 为底部导航留出空间
+}
+
+// 内容容器，添加边距
+.chess-content {
+  padding: 0 30rpx;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+// 卡片基本样式
+.chess-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10rpx;
+  padding: 20rpx;
+  margin: 10rpx 0;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+// 按钮基本样式
+.chess-button {
+  background-color: #81B64C;
+  border-radius: 10rpx;
+  padding: 20rpx 0;
+  text-align: center;
+
+  &-text {
+    color: white;
+    font-size: 32rpx;
+    font-weight: bold;
+  }
+}
+
+// 通用控制区域样式
+.control-area {
+  padding: 0;
+  margin-top: auto;
+  border-radius: 20rpx;
+
+  // 标签内容区
+  .tab-content {
+    padding: 20rpx;
+    background-color: rgba(0, 0, 0, 0.40);
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// 好友游戏和天梯赛通用样式
+.social-button {
+  display: flex;
+  align-items: center;
+  width: 95%;
+  padding: 30rpx;
+  margin: 20rpx 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10rpx;
+
+  .button-icon {
+    width: 60rpx;
+    height: 60rpx;
+    margin-right: 20rpx;
+  }
+
+  .button-text {
+    flex: 1;
+    font-weight: bold;
+    font-size: 34rpx;
+    color: #fff;
+    text-align: center;
+  }
+}
+
+// 弹出层通用样式
+.popup-content {
+  width: 560rpx;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  background-color: rgba(0, 0, 0, 0.85);
+
+  .popup-title {
+    text-align: center;
+    font-size: 36rpx;
+    font-weight: bold;
+    color: #EEE;
+    margin-bottom: 30rpx;
+  }
+
+  .popup-options {
+    .popup-option {
+      display: flex;
+      align-items: center;
+      padding: 20rpx;
+      margin-bottom: 10rpx;
+      border-radius: 10rpx;
+
+      &.selected {
+        background-color: #f0f0f0;
+      }
+
+      .option-icon {
+        width: 50rpx;
+        height: 50rpx;
+        margin-right: 20rpx;
+      }
+
+      .option-text {
+        font-size: 32rpx;
+        color: #333;
+      }
+    }
+  }
+
+  .popup-close {
+    margin-top: 30rpx;
+    text-align: center;
+    padding: 20rpx;
+    background-color: #81B64C;
+    color: white;
+    border-radius: 10rpx;
+    font-size: 32rpx;
+  }
+}
+
+// 覆盖uni-popup样式
+.uni-popup .uni-popup-wrapper .uni-popup-content {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}

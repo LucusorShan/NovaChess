@@ -89,7 +89,7 @@
         return this.$store.state.user.avatar
       },
       windowHeight() {
-        return uni.getSystemInfoSync().windowHeight - 50
+        return uni.getWindowInfo().windowHeight - 50
       }
     },
     methods: {

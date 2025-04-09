@@ -34,7 +34,7 @@
   export default {
     data() {
       return {
-        windowHeight: uni.getSystemInfoSync().windowHeight
+        windowHeight: uni.getWindowInfo().windowHeight
       }
     },
     methods: {

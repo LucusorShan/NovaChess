@@ -30,5 +30,11 @@
 </script>
 
 <style lang="scss">
-  @import '@/static/scss/index.scss'
+  @import '@/static/scss/index.scss';
+  @import '@/styles/chess/chess-common.scss';
+  
+  /* 全局覆盖uni-popup样式 */
+  .uni-popup .uni-popup-wrapper .uni-popup-content {
+    background-color: transparent ;
+  }
 </style>
