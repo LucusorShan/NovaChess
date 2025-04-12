@@ -29,7 +29,8 @@
     {
       "path": "pages/work/index",
       "style": {
-        "navigationBarTitleText": "进步"
+        "navigationBarTitleText": "进步",
+        "navigationStyle": "custom" //通过这个隐藏或显示title
       }
     },
     {
@@ -151,6 +152,34 @@
     {
       "path": "pages/work/repository/index",
       "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/work/admin/index",
+      "style": {
+        "navigationBarTitleText": "后台管理",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/work/admin/course/index",
+      "style": {
+        "navigationBarTitleText": "课程管理",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/work/admin/course/edit",
+      "style": {
+        "navigationBarTitleText": "编辑课程",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/play/replay/index",
+      "style": {
+        "navigationBarTitleText": "对局回看",
         "navigationStyle": "custom"
       }
     }

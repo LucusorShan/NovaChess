@@ -176,7 +176,7 @@ export default {
   .module-item {
     display: flex;
     align-items: center;
-    background-color: rgba(67, 41, 21, 0.7);
+    background-color: rgba(0,0,0,0.2);
     border-radius: 20rpx;
     padding: 30rpx;
     margin-bottom: 30rpx;
@@ -201,8 +201,9 @@ export default {
       
       .module-title {
         color: #ffffff;
-        font-size: 48rpx;
-        margin-bottom: 8rpx;
+        font-size: 44rpx;
+        font-weight: 600;
+        margin-bottom: 15rpx;
       }
       
       .module-subtitle {
@@ -231,6 +232,7 @@ export default {
       
       .tool-text {
         color: #ffffff;
+        font-weight: bold;
         font-size: 32rpx;
       }
     }

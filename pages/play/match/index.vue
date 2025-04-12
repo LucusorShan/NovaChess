@@ -16,19 +16,21 @@
         />
         
         <!-- 棋盘区 -->
-        <chess-board
-          ref="chessBoard"
-          :board-state="chessboard"
-          :selected-position="selectedPosition"
-          :valid-moves="validMoves"
-          :last-move="lastMove"
-          :current-player="currentPlayer"
-          :play-as="playAs"
-          :is-checkmated="isCheckmated"
-          :checkmate-color="checkmateColor"
-          @cell-click="handleCellClick"
-          @promotion-move="handlePromotion"
-        />
+        <view class="board-container">
+          <chess-board
+            ref="chessBoard"
+            :board-state="chessboard"
+            :selected-position="selectedPosition"
+            :valid-moves="validMoves"
+            :last-move="lastMove"
+            :current-player="currentPlayer"
+            :play-as="playAs"
+            :is-checkmated="isCheckmated"
+            :checkmate-color="checkmateColor"
+            @cell-click="handleCellClick"
+            @promotion-move="handlePromotion"
+          />
+        </view>
       
       <!-- 玩家信息 -->
         <player-info 
@@ -1401,9 +1403,17 @@ export default {
 
 // 对战区域样式
 .battle-area {
-        display: flex;
+  display: flex;
   flex-direction: column;
   padding: 20rpx 10rpx;
+  
+  .board-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20rpx 0;
+  }
 }
 
 // 返回按钮

@@ -23,7 +23,12 @@
     
     <!-- 对局历史列表 -->
     <view v-if="activeSubTab === 'history'" class="games-list">
-      <view v-for="(game, index) in historyGames" :key="index" class="game-item">
+      <view 
+        v-for="(game, index) in historyGames" 
+        :key="index" 
+        class="game-item"
+        @click="gotoReplay(game.id)"
+      >
         <view class="time-icon">
           <image class="clock-icon" src="https://pic1.imgdb.cn/item/67f3c5ffe381c3632bee9011.png" mode="aspectFit"></image>
         </view>
@@ -42,7 +47,12 @@
     
     <!-- 观看比赛列表 -->
     <view v-if="activeSubTab === 'watch'" class="games-list">
-      <view v-for="(game, index) in liveGames" :key="index" class="game-item">
+      <view 
+        v-for="(game, index) in liveGames" 
+        :key="index" 
+        class="game-item"
+        @click="watchLive(game.id)"
+      >
         <view class="time-icon">
           <image class="clock-icon" src="https://pic1.imgdb.cn/item/67f3c5ffe381c3632bee9011.png" mode="aspectFit"></image>
         </view>
@@ -76,12 +86,65 @@ export default {
     return {
       activeSubTab: 'history', // 默认显示对局历史
       historyGames: [
-        { player1: 'lucasshanchuxiong', rating1: '221', player2: 'dawas39', rating2: '410', score: '0-1', duration: '10 min' },
+        { 
+          id: '1001', 
+          player1: 'lucasshanchuxiong', 
+          rating1: '221', 
+          player2: 'dawas39', 
+          rating2: '410', 
+          score: '0-1', 
+          duration: '10 min' 
+        },
+        { 
+          id: '1002', 
+          player1: 'Wang_JB', 
+          rating1: '1530', 
+          player2: 'GrandMaster2023', 
+          rating2: '1498', 
+          score: '1-0', 
+          duration: '15 min' 
+        },
+        { 
+          id: '1003', 
+          player1: 'ChessMaster88', 
+          rating1: '1842', 
+          player2: 'theloyalwolf', 
+          rating2: '1820', 
+          score: '½-½', 
+          duration: '5 min' 
+        }
       ],
       liveGames: [
-        { player1: 'rekonwa', rating1: '2390', player2: 'EdwardWarren1926', rating2: '2388', flag1: '/static/images/match/flag-pl.png', flag2: '/static/images/match/flag-us.png', duration: '10 min' },
-        { player1: 'Orosz_Milos_Mark', rating1: '2383', player2: 'vibhoor', rating2: '2370', flag1: '/static/images/match/flag-hu.png', flag2: '/static/images/match/flag-in.png', duration: '10 min' },
-        { player1: 'rekonwa', rating1: '2390', player2: 'EdwardWarren1926', rating2: '2388', flag1: '/static/images/match/flag-pl.png', flag2: '/static/images/match/flag-us.png', duration: '10 min' },
+        { 
+          id: '2001', 
+          player1: 'rekonwa', 
+          rating1: '2390', 
+          player2: 'EdwardWarren1926', 
+          rating2: '2388', 
+          flag1: '/static/images/match/flag-pl.png', 
+          flag2: '/static/images/match/flag-us.png', 
+          duration: '10 min' 
+        },
+        { 
+          id: '2002', 
+          player1: 'Orosz_Milos_Mark', 
+          rating1: '2383', 
+          player2: 'vibhoor', 
+          rating2: '2370', 
+          flag1: '/static/images/match/flag-hu.png', 
+          flag2: '/static/images/match/flag-in.png', 
+          duration: '10 min' 
+        },
+        { 
+          id: '2003', 
+          player1: 'NikoTheodo', 
+          rating1: '2390', 
+          player2: 'theloyalwolf', 
+          rating2: '2388', 
+          flag1: '/static/images/match/flag-pl.png', 
+          flag2: '/static/images/match/flag-us.png', 
+          duration: '10 min' 
+        }
       ]
     }
   },
@@ -89,6 +152,20 @@ export default {
     // 切换子标签页
     switchSubTab(tab) {
       this.activeSubTab = tab;
+    },
+    
+    // 跳转到回放界面
+    gotoReplay(id) {
+      uni.navigateTo({
+        url: `/pages/play/replay/index?id=${id}`
+      });
+    },
+    
+    // 跳转到观看直播界面
+    watchLive(id) {
+      uni.navigateTo({
+        url: `/pages/play/replay/index?id=${id}&live=true`
+      });
     }
   }
 }

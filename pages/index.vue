@@ -58,13 +58,12 @@
         <view class="table-header">
           <text class="cell-player">棋手</text>
           <text class="cell-result">结果</text>
-          <text class="cell-accuracy">Accuracy</text>
           <text class="cell-steps">步数</text>
           <text class="cell-date">日期</text>
         </view>
         
         <!-- 对局记录1 -->
-        <view class="match-record">
+        <view class="match-record" @tap="goToReplay('match1')">
           <view class="match-players">
             <view class="match-row">
               <view class="cell-player">
@@ -75,7 +74,6 @@
                 </view>
               </view>
               <text class="cell-result">1</text>
-              <text class="cell-accuracy">94.5</text>
               <text class="cell-steps">25</text>
               <text class="cell-date">25-03-26</text>
             </view>
@@ -88,7 +86,6 @@
                 </view>
               </view>
               <text class="cell-result">0</text>
-              <text class="cell-accuracy">82.6</text>
               <text class="cell-steps"></text>
               <text class="cell-date"></text>
             </view>
@@ -99,7 +96,7 @@
         </view>
         
         <!-- 对局记录2 -->
-        <view class="match-record">
+        <view class="match-record" @tap="goToReplay('match2')">
           <view class="match-players">
             <view class="match-row">
               <view class="cell-player">
@@ -110,7 +107,6 @@
                 </view>
               </view>
               <text class="cell-result">1</text>
-              <text class="cell-accuracy">94.5</text>
               <text class="cell-steps">25</text>
               <text class="cell-date">25-03-26</text>
             </view>
@@ -123,7 +119,6 @@
                 </view>
               </view>
               <text class="cell-result">0</text>
-              <text class="cell-accuracy">82.6</text>
               <text class="cell-steps"></text>
               <text class="cell-date"></text>
             </view>
@@ -134,7 +129,7 @@
         </view>
         
         <!-- 对局记录3 -->
-        <view class="match-record">
+        <view class="match-record" @tap="goToReplay('match3')">
           <view class="match-players">
             <view class="match-row">
               <view class="cell-player">
@@ -145,7 +140,6 @@
                 </view>
               </view>
               <text class="cell-result">1</text>
-              <text class="cell-accuracy">94.5</text>
               <text class="cell-steps">25</text>
               <text class="cell-date">25-03-26</text>
             </view>
@@ -158,7 +152,6 @@
                 </view>
               </view>
               <text class="cell-result">0</text>
-              <text class="cell-accuracy">82.6</text>
               <text class="cell-steps"></text>
               <text class="cell-date"></text>
             </view>
@@ -214,6 +207,22 @@ export default {
           }
         }
       });
+    },
+    goToReplay(matchId) {
+      console.log('跳转到回看界面:', matchId)
+      uni.navigateTo({
+        url: `/pages/play/replay/index?id=${matchId}`,
+        success: () => {
+          console.log('跳转成功')
+        },
+        fail: (err) => {
+          console.error('跳转失败:', err)
+          uni.showToast({
+            title: '跳转失败',
+            icon: 'none'
+          })
+        }
+      })
     }
   }
 }
@@ -394,7 +403,7 @@ export default {
         padding-left: 20rpx;
       }
       
-      .cell-result, .cell-accuracy, .cell-steps, .cell-date {
+      .cell-result, .cell-steps, .cell-date {
         flex: 1;
         text-align: center;
       }
@@ -402,7 +411,7 @@ export default {
     
     .match-record {
       display: flex;
-      margin: 20rpx auto;
+      margin: 30rpx auto;
       position: relative;
       
       .match-players {
@@ -411,15 +420,15 @@ export default {
       
       .match-result {
         position: absolute;
-        right: 40%;
+        right: 35%;
         top: 50%;
         transform: translateY(-50%);
         z-index: 1;
         
         &.win {
           .result-text {
-            color: #22a45d;
-            font-size: 22rpx;
+            color: #81b64c;
+            font-size: 24rpx;
             font-weight: bold;
           }
         }
@@ -457,7 +466,7 @@ export default {
           margin-right: 15rpx;
           
           &.win {
-            background-color: #22a45d;
+            background-color: #81b64c;
           }
           
           &.lose {
@@ -470,21 +479,21 @@ export default {
           
           .player-name {
             color: white;
-            font-size: 20rpx;
+            font-size: 24rpx;
             margin-right: 10rpx;
           }
           
           .player-rating {
             color: #cccccc;
-            font-size: 20rpx;
+            font-size: 24rpx;
           }
         }
       }
       
-      .cell-result, .cell-accuracy, .cell-steps, .cell-date {
+      .cell-result, .cell-steps, .cell-date {
         flex: 1;
         color: white;
-        font-size: 20rpx;
+        font-size: 24rpx;
         text-align: center;
         justify-content: center;
       }

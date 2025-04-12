@@ -11,7 +11,7 @@
     
     <!-- 引导对话区 -->
     <view class="guide-dialog">
-      <image class="avatar" src="https://pic1.imgdb.cn/item/67f3c5c7e381c3632bee8ff9.png" mode="aspectFit"></image>
+      <image class="avatar" src="https://pic1.imgdb.cn/item/67f3eb4ce381c3632beea0b4.png" mode="aspectFit"></image>
       <view class="dialog-bubble">
         <text class="dialog-text">让我教你如何下国际象棋吧！</text>
       </view>
@@ -48,28 +48,98 @@
           <text class="module-title">资料仓库</text>
         </view>
       </view>
+      
+      <!-- 管理入口，仅管理员可见 -->
+      <view class="module-item admin-module" v-if="isAdmin" @click="goToAdmin">
+        <view class="module-icon">
+          <view class="iconfont icon-setting"></view>
+        </view>
+        <view class="module-content">
+          <text class="module-title">课程管理</text>
+        </view>
+      </view>
     </view>
   </view>
 </template>
 
 <script>
 import TopSpacing from '@/components/TopSpacing.vue'
+import TabBar from '@/components/TabBar.vue'
+import { checkRole } from '@/utils/permission'
 
 export default {
   components: {
-    TopSpacing
+    TopSpacing,
+    TabBar
   },
   data() {
     return {
-      statusBarHeight: 0
+      statusBarHeight: 0,
+      isAdmin: false
     }
   },
   onLoad() {
     // 获取状态栏高度
     const systemInfo = uni.getSystemInfoSync()
     this.statusBarHeight = systemInfo.statusBarHeight
+    
+    // 检查是否为管理员
+    this.checkAdminRole()
   },
+  
+  // 每次进入页面时检查管理员权限
+  onShow() {
+    this.checkAdminRole()
+  },
+  
   methods: {
+    // 检查管理员权限
+    checkAdminRole() {
+      // 从store获取角色信息
+      const roles = this.$store.getters.roles || []
+      console.log('当前用户角色:', roles)
+      this.isAdmin = checkRole(['admin'])
+    },
+    
+    // 前往学习模块
+    goToLearn() {
+      uni.navigateTo({
+        url: '/pages/work/learn/index'
+      })
+    },
+    
+    // 前往管理界面
+    goToAdmin() {
+      console.log('正在跳转到管理界面...')
+      try {
+        uni.navigateTo({
+          url: '/pages/work/admin/index',
+          success: (res) => {
+            console.log('跳转成功！', res)
+          },
+          fail: (err) => {
+            console.error('跳转失败：', err)
+            // 尝试使用不同的路由格式
+            uni.navigateTo({
+              url: './admin/index',
+              success: (res) => {
+                console.log('使用相对路径跳转成功！', res)
+              },
+              fail: (err2) => {
+                console.error('使用相对路径也跳转失败：', err2)
+                uni.showToast({
+                  title: '无法访问管理页面',
+                  icon: 'none'
+                })
+              }
+            })
+          }
+        })
+      } catch (error) {
+        console.error('跳转异常：', error)
+      }
+    },
+    
     // 处理模块点击
     handleModuleClick(type) {
       switch (type) {
@@ -157,8 +227,9 @@ export default {
     }
     
     .dialog-text {
-      color: #000000;
-      font-size: 40rpx;
+      color: #565656;
+      font-size: 34rpx;
+      font-weight: bold;
     }
   }
 }
@@ -187,6 +258,11 @@ export default {
         width: 80rpx;
         height: 80rpx;
       }
+      
+      .iconfont {
+        color: #ffffff;
+        font-size: 60rpx;
+      }
     }
     
     .module-content {
@@ -197,6 +273,44 @@ export default {
       .module-title {
         color: #ffffff;
         font-size: 48rpx;
+      }
+    }
+    
+    &.admin-module {
+      background-color: rgba(0,0,0,0.2);
+    }
+  }
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 20rpx;
+  margin-bottom: 30rpx;
+  
+  .card-icon {
+    width: 90rpx;
+    height: 90rpx;
+    border-radius: 45rpx;
+    background-color: rgba(33, 150, 243, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20rpx;
+    
+    image {
+      width: 50rpx;
+      height: 50rpx;
+    }
+    
+    &.admin-icon {
+      background-color: rgba(255, 87, 34, 0.3);
+      
+      .iconfont {
+        font-size: 40rpx;
+        color: #FF5722;
       }
     }
   }

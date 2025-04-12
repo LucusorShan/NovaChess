@@ -124,6 +124,11 @@
       loginSuccess(result) {
         // 设置用户信息
         this.$store.dispatch('GetInfo').then(res => {
+          // 为测试目的，当用户名为admin时，强制设置admin角色
+          if (this.loginForm.username === 'admin') {
+            this.$store.commit('SET_ROLES', ['admin'])
+            console.log('已设置管理员角色')
+          }
           this.$tab.reLaunch('/pages/index')
         })
       }

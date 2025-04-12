@@ -24,19 +24,21 @@
         />
         
         <!-- 棋盘区域 -->
-        <chess-board 
-          ref="chessBoard"
-          :board-state="boardState"
-          :selected-position="selectedPosition"
-          :valid-moves="validMoves"
-          :last-move="lastMove"
-          :current-player="currentPlayer"
-          :play-as="playerColor"
-          :is-checkmated="isCheckmated"
-          :checkmate-color="checkmateColor"
-          @cell-click="handleCellClick"
-          @promotion-move="handlePromotion"
-        />
+        <view class="board-container">
+          <chess-board 
+            ref="chessBoard"
+            :board-state="boardState"
+            :selected-position="selectedPosition"
+            :valid-moves="validMoves"
+            :last-move="lastMove"
+            :current-player="currentPlayer"
+            :play-as="playerColor"
+            :is-checkmated="isCheckmated"
+            :checkmate-color="checkmateColor"
+            @cell-click="handleCellClick"
+            @promotion-move="handlePromotion"
+          />
+        </view>
         
         <!-- 玩家信息（放在底部） -->
         <player-info 
@@ -920,6 +922,16 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20rpx;
+  
+  .board-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10rpx 0;
+    height: auto;
+    background-color: transparent;
+  }
 }
 
 /* 互动区域样式 */
@@ -1131,5 +1143,15 @@ export default {
       }
     }
   }
+}
+
+/* 棋盘区域样式 */
+.board-container {
+  position: relative;
+  width: 100%;
+  height: 300rpx;
+  border-radius: 10rpx;
+  overflow: hidden;
+  background-color: #fff;
 }
 </style> 

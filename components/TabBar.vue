@@ -58,7 +58,7 @@ export default {
   left: 0;
   right: 0;
   height: 120rpx;
-  background-color: rgba(0,0,0,0.8);
+  background-color:zrgba(0,0,0,0.8);
   display: flex;
   justify-content: space-around;
 
