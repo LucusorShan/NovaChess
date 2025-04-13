@@ -1,40 +1,44 @@
 <template>
-  <view class="normal-login-container">
+  <view class="chess-register-container">
     <!-- 顶部间距 -->
     <top-spacing :height="statusBarHeight"></top-spacing>
     
     <view class="logo-content align-center justify-center flex">
-      <image style="width: 100rpx;height: 100rpx;" :src="globalConfig.appInfo.logo" mode="widthFix">
-      </image>
-      <text class="title">若依移动端注册</text>
+      <image class="logo-image" :src="globalConfig.appInfo.logo" mode="widthFix"></image>
     </view>
-    <view class="login-form-content">
+    
+    <view class="register-form-content">
+      <view class="form-title">新用户注册</view>
+      
       <view class="input-item flex align-center">
-        <view class="iconfont icon-user icon"></view>
-        <input v-model="registerForm.username" class="input" type="text" placeholder="请输入账号" maxlength="30" />
+        <input v-model="registerForm.username" class="input" type="text" placeholder="创建用户名" maxlength="30" />
       </view>
+      
       <view class="input-item flex align-center">
-        <view class="iconfont icon-password icon"></view>
-        <input v-model="registerForm.password" type="password" class="input" placeholder="请输入密码" maxlength="20" />
+        <input v-model="registerForm.password" type="password" class="input" placeholder="创建密码" maxlength="20" />
       </view>
+      
       <view class="input-item flex align-center">
-        <view class="iconfont icon-password icon"></view>
-        <input v-model="registerForm.confirmPassword" type="password" class="input" placeholder="请输入重复密码" maxlength="20" />
+        <input v-model="registerForm.confirmPassword" type="password" class="input" placeholder="确认密码" maxlength="20" />
       </view>
-      <view class="input-item flex align-center" style="width: 60%;margin: 0px;" v-if="captchaEnabled">
-        <view class="iconfont icon-code icon"></view>
-        <input v-model="registerForm.code" type="number" class="input" placeholder="请输入验证码" maxlength="4" />
-        <view class="login-code"> 
+      
+      <view class="input-item flex align-center captcha-container" v-if="captchaEnabled">
+        <input v-model="registerForm.code" type="number" class="input captcha-input" placeholder="验证码" maxlength="4" />
+        <view class="captcha-image"> 
           <image :src="codeUrl" @click="getCode" class="login-code-img"></image>
         </view>
       </view>
+      
       <view class="action-btn">
-        <button @click="handleRegister()" class="register-btn cu-btn block bg-blue lg round">注册</button>
+        <button @click="handleRegister()" class="register-btn">注册账号</button>
+      </view>
+      
+      <view class="login-link">
+        <text @click="handleUserLogin" class="login-btn-link">使用已有账号登录</text>
       </view>
     </view>
-    <view class="xieyi text-center">
-      <text @click="handleUserLogin" class="text-blue">使用已有账号登录</text>
-    </view>
+    
+    
   </view>
 </template>
 
@@ -124,77 +128,117 @@
 
 <style lang="scss" scoped>
   page {
-    background-color: #ffffff;
+    background-image: url('https://pic1.imgdb.cn/item/67f356300ba3d5a1d7ef164f.png');
+    background-size: cover;
+    background-position: center;
   }
 
-  .normal-login-container {
+  .chess-register-container {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 30rpx;
 
     .logo-content {
       width: 100%;
-      font-size: 21px;
-      text-align: center;
-      padding-top: 15%;
+      padding-top: 10%;
+      margin-bottom: 30rpx;
 
-      image {
-        border-radius: 4px;
-      }
-
-      .title {
-        margin-left: 10px;
+      .logo-image {
+        width: 200rpx;
+        height: 200rpx;
+        border-radius: 8rpx;
       }
     }
 
-    .login-form-content {
-      text-align: center;
-      margin: 20px auto;
-      margin-top: 15%;
-      width: 80%;
+    .register-form-content {
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 10rpx;
+      box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+      padding: 40rpx 30rpx;
+      
+      .form-title {
+        font-size: 42rpx;
+        font-weight: bold;
+        color: #EEE;
+        margin-bottom: 40rpx;
+        text-align: center;
+      }
 
       .input-item {
-        margin: 20px auto;
-        background-color: #f5f6f7;
-        height: 45px;
-        border-radius: 20px;
-
-        .icon {
-          font-size: 38rpx;
-          margin-left: 10px;
-          color: #999;
-        }
+        margin-bottom: 30rpx;
+        height: 90rpx;
+        border: 1rpx solid #dddddd44;
+        border-radius: 8rpx;
+        background-color: #ffffff22;
+        overflow: hidden;
 
         .input {
           width: 100%;
-          font-size: 14px;
-          line-height: 20px;
-          text-align: left;
-          padding-left: 15px;
+          height: 100%;
+          color: #EEE;
+          font-size: 30rpx;
+          padding: 0 30rpx;
         }
-
+      }
+      
+      .captcha-container {
+        display: flex;
+        
+        .captcha-input {
+          flex: 1;
+        }
+        
+        .captcha-image {
+          width: 200rpx;
+          height: 90rpx;
+          
+          .login-code-img {
+            width: 100%;
+            height: 100%;
+          }
+        }
       }
 
       .register-btn {
-        margin-top: 40px;
-        height: 45px;
-      }
-
-      .xieyi {
-        color: #333;
-        margin-top: 20px;
+        width: 100%;
+        height: 90rpx;
+        background-color: #7fa650;
+        color: white;
+        font-size: 32rpx;
+        font-weight: bold;
+        border-radius: 8rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20rpx;
+        border: none;
       }
       
-      .login-code {
-        height: 38px;
-        float: right;
-      
-        .login-code-img {
-          height: 38px;
-          position: absolute;
-          margin-left: 10px;
-          width: 200rpx;
+      .login-link {
+        margin-top: 40rpx;
+        text-align: center;
+        
+        .login-btn-link {
+          font-size: 30rpx;
+          color: #7fa650;
+          text-decoration: none;
         }
       }
     }
+    
+    .xieyi {
+      margin-top: 40rpx;
+      font-size: 24rpx;
+      
+      .text-blue {
+        color: #7fa650;
+        margin: 0 6rpx;
+      }
+    }
   }
-
 </style>

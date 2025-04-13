@@ -383,6 +383,26 @@ export default {
       this.selectedPosition = { row, col };
       // 获取有效移动
       this.validMoves = getValidMoves(this.boardState, row, col);
+
+      // 添加过路兵检测的调试输出
+      const piece = this.boardState[row][col];
+      if (piece && getPieceType(piece) === 'pawn') {
+        const color = getPieceColor(piece);
+        const enPassantRow = color === 'white' ? 3 : 4; // 吃过路兵的行位置
+
+        // 检查是否存在可能的吃过路兵移动
+        const enPassantMoves = this.validMoves.filter(move => move.isEnPassant);
+        
+        console.log('当前选中的兵:', { row, col, color });
+        console.log('可以吃过路兵的行:', enPassantRow);
+        console.log('找到的吃过路兵移动:', enPassantMoves);
+        
+        if (enPassantMoves.length === 0) {
+          console.log('当前棋子没有吃过路兵的移动');
+        } else {
+          console.log('存在可以吃过路兵的移动!', enPassantMoves);
+        }
+      }
     },
     
     // 移动棋子

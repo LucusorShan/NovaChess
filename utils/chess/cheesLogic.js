@@ -34,7 +34,8 @@ export const chessBoardState = {
       rightRookMoved: false
     }
   },
-  enPassant: null
+  enPassant: null,
+  lastMovePieceColor: null // 添加记录最后移动棋子颜色的属性
 };
 
 // 重置棋盘状态
@@ -46,6 +47,7 @@ export function resetChessBoardState() {
   chessBoardState.canCastle.black.leftRookMoved = false;
   chessBoardState.canCastle.black.rightRookMoved = false;
   chessBoardState.enPassant = null;
+  chessBoardState.lastMovePieceColor = null;
 }
 
 // 获取兵的有效移动
@@ -53,6 +55,13 @@ export function getPawnMoves(board, row, col, color) {
   const moves = [];
   const direction = color === 'white' ? -1 : 1; // 白色向上，黑色向下
   const startRow = color === 'white' ? 6 : 1; // 初始行
+  const enPassantRow = color === 'white' ? 3 : 4; // 可以执行吃过路兵的行（白兵在第5行，黑兵在第4行）
+
+  // 调试信息：当前兵的位置和颜色，以及过路兵状态
+  console.log(`===== 计算兵的移动 =====`);
+  console.log(`- 兵位置: (${row},${col}), 颜色: ${color}`);
+  console.log(`- 过路兵状态:`, chessBoardState.enPassant ? JSON.stringify(chessBoardState.enPassant) : "null");
+  console.log(`- 最后移动棋子颜色:`, chessBoardState.lastMovePieceColor);
 
   // 前进一步
   if (isValidPosition(row + direction, col) && !board[row + direction][col]) {
@@ -71,10 +80,27 @@ export function getPawnMoves(board, row, col, color) {
       moves.push({ row: row + direction, col: col - 1 });
     }
 
+    // 检查是否可以吃过路兵（左侧）
+    const canEnPassantLeft = !targetPiece &&
+      chessBoardState.enPassant &&
+      row === enPassantRow && // 修改这里：兵必须在吃过路兵行上
+      chessBoardState.enPassant.col === col - 1 &&
+      chessBoardState.enPassant.captureColor === color;
+
+    console.log(`- 检查左侧吃过路兵条件:`);
+    console.log(`  - 目标格为空: ${!targetPiece}`);
+    console.log(`  - 过路兵状态存在: ${!!chessBoardState.enPassant}`);
+    if (chessBoardState.enPassant) {
+      console.log(`  - 兵在吃过路兵行上: ${row === enPassantRow} (${row} vs ${enPassantRow})`);
+      console.log(`  - 过路兵列匹配: ${chessBoardState.enPassant.col === col - 1} (${chessBoardState.enPassant.col} vs ${col - 1})`);
+      console.log(`  - 可吃颜色匹配: ${chessBoardState.enPassant.captureColor === color} (${chessBoardState.enPassant.captureColor} vs ${color})`);
+    }
+    console.log(`  - 最终结果: ${canEnPassantLeft}`);
+
     // 吃过路兵
-    if (!targetPiece && chessBoardState.enPassant &&
-      chessBoardState.enPassant.row === row &&
-      chessBoardState.enPassant.col === col - 1) {
+    if (canEnPassantLeft) {
+      console.log(`【发现可吃过路兵】 - 左侧 - 当前位置:(${row},${col}), 目标位置:(${row + direction},${col - 1}), 被吃棋子位置:(${row},${col - 1})`);
+
       moves.push({
         row: row + direction,
         col: col - 1,
@@ -91,10 +117,27 @@ export function getPawnMoves(board, row, col, color) {
       moves.push({ row: row + direction, col: col + 1 });
     }
 
+    // 检查是否可以吃过路兵（右侧）
+    const canEnPassantRight = !targetPiece &&
+      chessBoardState.enPassant &&
+      row === enPassantRow && // 修改这里：兵必须在吃过路兵行上
+      chessBoardState.enPassant.col === col + 1 &&
+      chessBoardState.enPassant.captureColor === color;
+
+    console.log(`- 检查右侧吃过路兵条件:`);
+    console.log(`  - 目标格为空: ${!targetPiece}`);
+    console.log(`  - 过路兵状态存在: ${!!chessBoardState.enPassant}`);
+    if (chessBoardState.enPassant) {
+      console.log(`  - 兵在吃过路兵行上: ${row === enPassantRow} (${row} vs ${enPassantRow})`);
+      console.log(`  - 过路兵列匹配: ${chessBoardState.enPassant.col === col + 1} (${chessBoardState.enPassant.col} vs ${col + 1})`);
+      console.log(`  - 可吃颜色匹配: ${chessBoardState.enPassant.captureColor === color} (${chessBoardState.enPassant.captureColor} vs ${color})`);
+    }
+    console.log(`  - 最终结果: ${canEnPassantRight}`);
+
     // 吃过路兵
-    if (!targetPiece && chessBoardState.enPassant &&
-      chessBoardState.enPassant.row === row &&
-      chessBoardState.enPassant.col === col + 1) {
+    if (canEnPassantRight) {
+      console.log(`【发现可吃过路兵】 - 右侧 - 当前位置:(${row},${col}), 目标位置:(${row + direction},${col + 1}), 被吃棋子位置:(${row},${col + 1})`);
+
       moves.push({
         row: row + direction,
         col: col + 1,
@@ -103,6 +146,10 @@ export function getPawnMoves(board, row, col, color) {
       });
     }
   }
+
+  // 打印所有有效移动
+  console.log(`- 找到有效移动:`, moves.map(m => `(${m.row},${m.col})${m.isEnPassant ? ' (吃过路兵)' : ''}`).join(', '));
+  console.log(`===== 结束兵的移动计算 =====`);
 
   return moves;
 }
@@ -405,20 +452,29 @@ export function getMovesInDirection(board, row, col, rowDir, colDir, color, move
 // 记录棋子移动并更新状态
 export function recordMove(board, from, to, moveInfo = {}) {
   const piece = board[from.row][from.col];
+  if (!piece) return null;
+
   const pieceType = getPieceType(piece);
   const pieceColor = getPieceColor(piece);
 
-  // 记录这步移动
+  console.log(`===== 记录棋子移动 =====`);
+  console.log(`- 棋子: ${piece}, 从 (${from.row},${from.col}) 到 (${to.row},${to.col})`);
+  console.log(`- 特殊移动标志:`, JSON.stringify(moveInfo));
+
+  // 记录更多的移动信息
   const move = {
+    from: { ...from },
+    to: { ...to },
     piece,
-    from,
-    to,
     captured: board[to.row][to.col],
-    ...moveInfo
+    isCastling: moveInfo.isCastling || false,
+    isEnPassant: moveInfo.isEnPassant || false,
+    isPromotion: moveInfo.isPromotion || false,
   };
 
-  // 更新王和车的移动状态（用于王车易位判断）
+  // 处理王的移动
   if (pieceType === 'king') {
+    // 标记王已移动
     if (pieceColor === 'white') {
       chessBoardState.canCastle.white.kingMoved = true;
     } else {
@@ -430,13 +486,8 @@ export function recordMove(board, from, to, moveInfo = {}) {
       // 移动车
       board[moveInfo.rookTo.row][moveInfo.rookTo.col] = board[moveInfo.rookFrom.row][moveInfo.rookFrom.col];
       board[moveInfo.rookFrom.row][moveInfo.rookFrom.col] = null;
-
-      // 记录车的移动信息
-      move.rookMove = {
-        piece: board[moveInfo.rookTo.row][moveInfo.rookTo.col],
-        from: moveInfo.rookFrom,
-        to: moveInfo.rookTo
-      };
+      move.rookFrom = { ...moveInfo.rookFrom };
+      move.rookTo = { ...moveInfo.rookTo };
     }
   } else if (pieceType === 'rook') {
     const kingStartRow = pieceColor === 'white' ? 7 : 0;
@@ -460,20 +511,61 @@ export function recordMove(board, from, to, moveInfo = {}) {
     const startRow = pieceColor === 'white' ? 6 : 1;
     const moveDistance = Math.abs(from.row - to.row);
 
+    console.log(`- 兵移动信息:`);
+    console.log(`  - 初始位置: ${from.row === startRow} (${from.row} vs ${startRow})`);
+    console.log(`  - 移动距离: ${moveDistance}`);
+
+    // 兵从初始位置移动两格，设置过路兵状态
     if (from.row === startRow && moveDistance === 2) {
-      // 记录吃过路兵的可能位置
-      chessBoardState.enPassant = {
-        row: pieceColor === 'white' ? from.row - 1 : from.row + 1,
-        col: from.col
+      const enPassantRow = pieceColor === 'white' ? from.row - 1 : from.row + 1;
+      const newEnPassantState = {
+        row: enPassantRow,
+        col: from.col,
+        captureColor: pieceColor === 'white' ? 'black' : 'white'
       };
-    } else {
-      chessBoardState.enPassant = null;
+
+      console.log(`- 设置新的过路兵状态:`);
+      console.log(`  - 位置: (${enPassantRow},${from.col})`);
+      console.log(`  - 兵颜色: ${pieceColor}`);
+      console.log(`  - 可吃颜色: ${newEnPassantState.captureColor}`);
+
+      chessBoardState.enPassant = newEnPassantState;
+    }
+    // 检查是否需要清除过路兵状态
+    else {
+      const shouldClearEnPassant = chessBoardState.enPassant &&
+        chessBoardState.lastMovePieceColor === chessBoardState.enPassant.captureColor;
+
+      console.log(`- 检查是否需要清除过路兵状态:`);
+      console.log(`  - 过路兵状态存在: ${!!chessBoardState.enPassant}`);
+      if (chessBoardState.enPassant) {
+        console.log(`  - 最后移动棋色: ${chessBoardState.lastMovePieceColor}`);
+        console.log(`  - 可吃过路兵颜色: ${chessBoardState.enPassant.captureColor}`);
+        console.log(`  - 条件匹配: ${shouldClearEnPassant}`);
+      }
+
+      if (shouldClearEnPassant) {
+        console.log(`- 清除过路兵状态 (对方已走过一步但未吃过路兵)`);
+        chessBoardState.enPassant = null;
+      }
     }
 
     // 处理吃过路兵
     if (moveInfo.isEnPassant && moveInfo.capturedPiecePos) {
+      console.log(`- 执行吃过路兵操作:`);
+      console.log(`  - 被吃位置: (${moveInfo.capturedPiecePos.row},${moveInfo.capturedPiecePos.col})`);
+      console.log(`  - 被吃棋子: ${board[moveInfo.capturedPiecePos.row][moveInfo.capturedPiecePos.col]}`);
+
+      // 记录被吃掉的棋子
+      move.captured = board[moveInfo.capturedPiecePos.row][moveInfo.capturedPiecePos.col];
+      // 移除被吃掉的过路兵
       board[moveInfo.capturedPiecePos.row][moveInfo.capturedPiecePos.col] = null;
       move.capturedEnPassant = true;
+      move.capturedPiecePos = { ...moveInfo.capturedPiecePos };
+
+      // 吃过路兵后清除过路兵状态
+      chessBoardState.enPassant = null;
+      console.log(`  - 过路兵状态已清除`);
     }
 
     // 处理兵升变
@@ -492,6 +584,13 @@ export function recordMove(board, from, to, moveInfo = {}) {
   // 更新棋盘
   board[to.row][to.col] = move.promotedTo || piece;
   board[from.row][from.col] = null;
+
+  // 记录最后移动的棋子颜色
+  const oldLastMoveColor = chessBoardState.lastMovePieceColor;
+  chessBoardState.lastMovePieceColor = pieceColor;
+
+  console.log(`- 更新最后移动颜色: ${oldLastMoveColor || 'null'} -> ${pieceColor}`);
+  console.log(`===== 结束记录移动 =====`);
 
   return move;
 }

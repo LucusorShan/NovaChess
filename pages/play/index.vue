@@ -430,6 +430,7 @@ export default {
       
       .time-icon {
         margin-right: 20rpx;
+        flex-shrink: 0;
         
         .clock-icon {
           width: 40rpx;
@@ -439,6 +440,7 @@ export default {
       
       .game-info {
         flex: 1;
+        min-width: 0;
         
         .players-info {
           display: flex;
@@ -447,7 +449,7 @@ export default {
           .player-name {
             color: white;
             font-size: 28rpx;
-            max-width: 240rpx;
+            max-width: 200rpx;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -457,11 +459,15 @@ export default {
             color: #e1b964;
             margin: 0 10rpx;
             font-size: 28rpx;
+            flex-shrink: 0;
           }
         }
       }
       
       .game-duration {
+        margin-left: 10rpx;
+        flex-shrink: 0;
+        
         .duration-text {
           color: #999;
           font-size: 24rpx;
@@ -474,6 +480,8 @@ export default {
 // 排行榜弹窗样式
 .rank-popup {
   height: 800rpx;
+  margin: auto;
+  overflow: hidden;
   
   .rank-list {
     max-height: 600rpx;
@@ -491,11 +499,12 @@ export default {
       }
       
       .rank-number {
-        width: 80rpx;
+        width: 60rpx;
         text-align: center;
         color: white;
         font-size: 32rpx;
         font-weight: bold;
+        flex-shrink: 0;
         
         &.top1 { color: gold; }
         &.top2 { color: silver; }
@@ -503,20 +512,26 @@ export default {
       }
       
       .player-avatar {
-        width: 80rpx;
-        height: 80rpx;
-        border-radius: 40rpx;
-        margin: 0 20rpx;
+        width: 70rpx;
+        height: 70rpx;
+        border-radius: 35rpx;
+        margin: 0 15rpx;
+        flex-shrink: 0;
       }
       
       .player-info {
         flex: 1;
+        min-width: 0;
+        overflow: hidden;
         
         .player-name {
           color: white;
           font-size: 32rpx;
           font-weight: bold;
           margin-bottom: 10rpx;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         
         .player-country {
@@ -527,6 +542,7 @@ export default {
             width: 30rpx;
             height: 20rpx;
             margin-right: 10rpx;
+            flex-shrink: 0;
           }
           
           .country-name {
@@ -540,6 +556,10 @@ export default {
         color: #e1b964;
         font-size: 36rpx;
         font-weight: bold;
+        margin-left: 10rpx;
+        flex-shrink: 0;
+        min-width: 90rpx;
+        text-align: right;
       }
     }
   }

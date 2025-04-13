@@ -15,7 +15,8 @@
             'last-move-from': lastMove && lastMove.from.row === getBoardRow(rowIndex) && lastMove.from.col === getBoardCol(colIndex),
             'last-move-to': lastMove && lastMove.to.row === getBoardRow(rowIndex) && lastMove.to.col === getBoardCol(colIndex),
             'castling-indicator': isCastlingPosition(getBoardRow(rowIndex), getBoardCol(colIndex)),
-            'en-passant-indicator': isEnPassantPosition(getBoardRow(rowIndex), getBoardCol(colIndex)),
+            'en-passant-target': isEnPassantPosition(getBoardRow(rowIndex), getBoardCol(colIndex)) === 'target',
+            'en-passant-captured': isEnPassantPosition(getBoardRow(rowIndex), getBoardCol(colIndex)) === 'captured',
             'checkmate-highlight': isCheckmated && isKingPosition(getBoardRow(rowIndex), getBoardCol(colIndex))
           }"
           @click="handleCellClick(getBoardRow(rowIndex), getBoardCol(colIndex))"
@@ -196,9 +197,28 @@ export default {
     
     // 检查是否是吃过路兵的目标位置
     isEnPassantPosition(row, col) {
-      return this.specialMoves.enPassant && 
+      // 添加调试信息
+      if (this.specialMoves.enPassant) {
+        console.log('验证吃过路兵 - 检查位置:', { row, col }, 
+          '目标位置:', this.specialMoves.enPassant,
+          '被吃棋子位置:', this.specialMoves.enPassant.capturedPiecePos);
+      }
+      
+      // 检查是否是吃过路兵的目标位置
+      const isTargetPosition = this.specialMoves.enPassant && 
              this.specialMoves.enPassant.row === row && 
              this.specialMoves.enPassant.col === col;
+      
+      // 检查是否是被吃掉的棋子位置
+      const isCapturedPosition = this.specialMoves.enPassant && 
+             this.specialMoves.enPassant.capturedPiecePos && 
+             this.specialMoves.enPassant.capturedPiecePos.row === row && 
+             this.specialMoves.enPassant.capturedPiecePos.col === col;
+      
+      // 返回更详细的分类，使模板可以使用不同的CSS类
+      if (isTargetPosition) return 'target';
+      if (isCapturedPosition) return 'captured';
+      return false;
     },
     
     // 播放移动音效
@@ -307,7 +327,29 @@ export default {
     
     // 设置吃过路兵的目标位置
     setEnPassantPosition(position) {
+      // 记录之前的状态用于调试
+      const oldPosition = this.specialMoves.enPassant;
+      
+      // 更新状态
       this.specialMoves.enPassant = position;
+      
+      // 添加详细的调试信息
+      console.log(`===== 设置过路兵位置 =====`);
+      if (position) {
+        console.log(`- 新的过路兵位置: { row: ${position.row}, col: ${position.col}, captureColor: ${position.captureColor} }`);
+        if (position.capturedPiecePos) {
+          console.log(`- 可被吃掉的棋子位置: { row: ${position.capturedPiecePos.row}, col: ${position.capturedPiecePos.col} }`);
+        }
+      } else {
+        console.log(`- 清除过路兵位置`);
+      }
+      
+      if (oldPosition) {
+        console.log(`- 原过路兵位置: { row: ${oldPosition.row}, col: ${oldPosition.col}, captureColor: ${oldPosition.captureColor} }`);
+      } else {
+        console.log(`- 之前无过路兵位置`);
+      }
+      console.log(`===== 结束设置过路兵位置 =====`);
     }
   },
   mounted() {
@@ -438,7 +480,8 @@ export default {
         
         // 特殊移动标识符
         &.castling-indicator::after,
-        &.en-passant-indicator::after {
+        &.en-passant-target::after,
+        &.en-passant-captured::after {
           content: '';
           position: absolute;
           top: 50%;
@@ -454,8 +497,20 @@ export default {
           background-color: rgba(255, 165, 0, 0.5); // 橙色标识王车易位
         }
         
-        &.en-passant-indicator::after {
-          background-color: rgba(255, 0, 0, 0.5); // 红色标识吃过路兵
+        &.en-passant-target::after {
+          background-color: rgba(255, 0, 0, 0.6); // 红色标识吃过路兵目标位置
+          animation: pulse-en-passant 1.5s infinite alternate;
+          width: 45%;
+          height: 45%;
+          border: 2rpx solid rgba(255, 255, 255, 0.8);
+        }
+        
+        &.en-passant-captured::after {
+          background-color: rgba(255, 0, 0, 0.3); // 淡红色标识被吃掉的棋子位置
+          width: 70%;
+          height: 70%;
+          border: 2rpx dashed rgba(255, 255, 255, 0.6);
+          animation: rotation 8s linear infinite;
         }
         
         // 上一步移动起点和终点的高亮
@@ -633,6 +688,24 @@ export default {
   100% {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes pulse-en-passant {
+  0% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 </style>

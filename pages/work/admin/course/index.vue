@@ -81,7 +81,13 @@
           <view class="course-content">
             <view class="course-title">
               <text>{{ course.title }}</text>
-              <view class="course-badge" :class="getCategoryClass(course.category)">
+              <view class="course-badge" 
+                :class="{
+                  'badge-basic': course.category === 'basic',
+                  'badge-advanced': course.category === 'advanced',
+                  'badge-strategy': course.category === 'strategy',
+                  'badge-default': !['basic', 'advanced', 'strategy'].includes(course.category)
+                }">
                 {{ getCategoryName(course.category) }}
               </view>
             </view>
@@ -861,4 +867,4 @@ export default {
     transform: translateY(0);
   }
 }
-</style>  </style> 
+</style>

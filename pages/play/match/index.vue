@@ -1115,6 +1115,7 @@ export default {
           } else if (validMove.isEnPassant) {
             moveInfo.isEnPassant = true;
             moveInfo.capturedPiecePos = validMove.capturedPiecePos;
+            console.log('执行吃过路兵移动，被吃子位置:', validMove.capturedPiecePos);
           }
           
           // 执行移动
@@ -1174,7 +1175,20 @@ export default {
         // 找出有效移动中的吃过路兵
         const enPassantMove = this.validMoves.find(move => move.isEnPassant);
         if (enPassantMove) {
-          this.$refs.chessBoard?.setEnPassantPosition(enPassantMove);
+          console.log('找到吃过路兵移动:', enPassantMove);
+          // 传递完整的过路兵信息，包括目标位置和被吃掉的棋子位置
+          this.$refs.chessBoard?.setEnPassantPosition({
+            row: enPassantMove.row,
+            col: enPassantMove.col,
+            capturedPiecePos: enPassantMove.capturedPiecePos // 添加被吃掉的棋子位置信息
+          });
+          
+          // 详细调试信息
+          console.log('吃过路兵详情 - 当前位置:', {row, col}, 
+            '目标位置:', {row: enPassantMove.row, col: enPassantMove.col}, 
+            '被吃棋子位置:', enPassantMove.capturedPiecePos);
+        } else {
+          console.log('当前棋子没有吃过路兵的移动');
         }
       }
     },
@@ -1597,4 +1611,4 @@ export default {
     }
   }
 }
-</style> 
+</style>
